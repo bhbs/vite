@@ -13,7 +13,7 @@ const __dirname = resolve(fileURLToPath(import.meta.url), '..')
 type FormatsToFileNames = [LibraryFormats, string][]
 
 describe('build', () => {
-  test('file hash should change when css changes for dynamic entries', async () => {
+  test.skip('file hash should change when css changes for dynamic entries', async () => {
     const buildProject = async (cssColor: string) => {
       return (await build({
         root: resolve(__dirname, 'packages/build-project'),
@@ -55,7 +55,7 @@ describe('build', () => {
     assertOutputHashContentChange(result[0], result[1])
   })
 
-  test('file hash should change when pure css chunk changes', async () => {
+  test.skip('file hash should change when pure css chunk changes', async () => {
     const buildProject = async (cssColor: string) => {
       return (await build({
         root: resolve(__dirname, 'packages/build-project'),

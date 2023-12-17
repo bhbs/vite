@@ -38,6 +38,7 @@ import {
 import { manifestPlugin } from './plugins/manifest'
 import type { Logger } from './logger'
 import { dataURIPlugin } from './plugins/dataUri'
+import { chunkMapPlugin } from './plugins/chunkMap'
 import { buildImportAnalysisPlugin } from './plugins/importAnalysisBuild'
 import { ssrManifestPlugin } from './ssr/ssrManifestPlugin'
 import { initDepsOptimizer } from './optimizer'
@@ -435,6 +436,11 @@ export async function resolveBuildPlugins(config: ResolvedConfig): Promise<{
         )
       ).filter(Boolean) as Plugin[]),
       ...(config.isWorker ? [webWorkerPostPlugin()] : []),
+      // TODO: Legacy support
+      ...(!config.isWorker &&
+      config.plugins.every((plugin) => !plugin.name.includes('vite:legacy'))
+        ? [chunkMapPlugin(config)]
+        : []),
     ],
     post: [
       buildImportAnalysisPlugin(config),

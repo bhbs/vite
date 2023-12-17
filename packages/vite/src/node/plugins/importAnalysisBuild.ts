@@ -28,6 +28,7 @@ import { genSourceMapUrl } from '../server/sourcemap'
 import { getDepsOptimizer, optimizedDepNeedsInterop } from '../optimizer'
 import { removedPureCssFilesCache } from './css'
 import { createParseErrorInfo, interopNamedImports } from './importAnalysis'
+import { createChunkMap } from './chunkMap'
 
 type FileDep = {
   url: string
@@ -439,6 +440,8 @@ export function buildImportAnalysisPlugin(config: ResolvedConfig): Plugin {
         return
       }
 
+      const chunkMap = createChunkMap(bundle)
+
       for (const file in bundle) {
         const chunk = bundle[file]
         // can't use chunk.dynamicImports.length here since some modules e.g.
@@ -512,7 +515,8 @@ export function buildImportAnalysisPlugin(config: ResolvedConfig): Plugin {
                   if (filename === ownerFilename) return
                   if (analyzed.has(filename)) return
                   analyzed.add(filename)
-                  const chunk = bundle[filename] as OutputChunk | undefined
+                  const chunk = (bundle[filename] ??
+                    bundle[chunkMap[filename]]) as OutputChunk | undefined
                   if (chunk) {
                     deps.add(chunk.fileName)
                     chunk.imports.forEach(addDeps)
