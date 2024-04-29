@@ -526,6 +526,8 @@ importers:
 
   playground/build-old: {}
 
+  playground/chunk-map: {}
+
   playground/cli: {}
 
   playground/cli-module:
